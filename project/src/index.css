@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-[#081F5C] bg-white font-sans;
+  }
+}
+
+@layer components {
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#081F5C] to-[#334EAC];
+  }
+  
+  .premium-card {
+    @apply relative overflow-hidden rounded-3xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] 
+    border border-[#E7F1FF] transition-all duration-300 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)];
+  }
+
+  .premium-button {
+    @apply inline-flex items-center px-8 py-4 text-base font-medium transition-all rounded-2xl
+    bg-gradient-to-r from-[#081F5C] to-[#334EAC] text-white
+    hover:shadow-[0_10px_20px_rgba(8,31,92,0.2)]
+    active:from-[#081F5C] active:to-[#334EAC]
+    backdrop-blur-sm;
+  }
+
+  .secondary-button {
+    @apply inline-flex items-center px-8 py-4 text-base font-medium transition-all rounded-2xl
+    bg-white text-[#081F5C] border border-[#D0E3FF]
+    hover:bg-[#F9FCFF] hover:shadow-md backdrop-blur-sm;
+  }
+
+  .phone-mockup {
+    @apply relative w-full aspect-[9/19.5] rounded-[3rem] border-[14px] border-[#081F5C] 
+    shadow-2xl overflow-hidden bg-white;
+  }
+
+  .phone-notch {
+    @apply absolute top-0 left-1/2 -translate-x-1/2 w-[25%] h-7 bg-[#081F5C] rounded-b-3xl;
+  }
+
+  .phone-status-bar {
+    @apply absolute top-1 left-0 right-0 px-6 flex justify-between items-center text-xs text-[#081F5C];
+  }
+
+  .phone-signal-icons {
+    @apply flex items-center gap-1;
+  }
+
+  .notification-card {
+    @apply absolute left-4 right-4 p-6 bg-white rounded-2xl shadow-lg border border-[#E7F1FF]
+    transform transition-all duration-500 ease-out;
+  }
+
+  .service-price {
+    @apply text-[#334EAC] text-2xl font-semibold tracking-tight;
+  }
+
+  .service-period {
+    @apply text-[#7096D1] text-sm ml-1;
+  }
+
+  .learn-more-button {
+    @apply inline-flex items-center px-6 py-3 text-sm font-medium rounded-xl
+    text-[#334EAC] bg-[#F9FCFF] hover:bg-[#E7F1FF] transition-all duration-300;
+  }
+}
+
+.hero-gradient {
+  background: radial-gradient(
+    circle at 70% 50%,
+    rgba(208, 227, 255, 0.3) 0%,
+    rgba(231, 241, 255, 0.2) 50%,
+    transparent 100%
+  );
+}
