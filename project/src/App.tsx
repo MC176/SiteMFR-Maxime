@@ -450,18 +450,15 @@ function Reviews() {
 function VideoSection() {
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
+      {/* Remplacement par l'iframe YouTube */}
+      <iframe
         className="absolute inset-0 w-full h-full object-cover"
-      >
-        <source
-          src="https://player.vimeo.com/external/373912444.sd.mp4?s=1c46592d1445a96db9dd5c6c10b6a93968c8de43&profile_id=164&oauth2_token_id=57447761"
-          type="video/mp4"
-        />
-      </video>
+        src="https://www.youtube.com/embed/zJIkX35lpcU?autoplay=1&loop=1&mute=1&playlist=zJIkX35lpcU&controls=0"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        title="YouTube video player"
+      />
       <div className="absolute inset-0 bg-black/40" />
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center text-white max-w-4xl px-4">

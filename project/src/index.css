@@ -34,11 +34,17 @@
     hover:bg-secondary-light/10 hover:shadow-md backdrop-blur-sm;
   }
 
+  .phone-container {
+    @apply absolute right-[-20%] top-[10%] w-[140%] h-[140%] transform rotate-[-20deg];
+  }
+
   .phone-mockup {
     @apply relative w-full aspect-[9/19.5] rounded-[3rem] border-[14px] border-[#1C1C1E] 
     shadow-[0_50px_100px_rgba(0,0,0,0.25)] overflow-hidden bg-white
     before:content-[''] before:absolute before:inset-0 before:z-10 
-    before:pointer-events-none before:border-[1px] before:border-white/10 before:rounded-[2rem];
+    before:pointer-events-none before:border-[1px] before:border-white/10 before:rounded-[2rem]
+    after:content-[''] after:absolute after:inset-[-100px] after:bg-gradient-to-t 
+    after:from-white after:via-transparent after:to-transparent after:z-20;
   }
 
   .phone-notch {
