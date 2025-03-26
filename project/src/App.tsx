@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Phone, Users, Star, Clock, Shield, Leaf, ChevronRight, Award, Euro, Smartphone, CheckCircle, MapPin, Signal, Wifi, Battery, ArrowRight, Bell, Heart, Scissors, TreePine, Award as Garden, MessageSquare, Instagram, Facebook, Mail, Send } from 'lucide-react';
+import {
+  Phone, Users, Star, Clock, Shield, Leaf, ChevronRight, Award,
+  Euro, Smartphone, CheckCircle, MapPin, Signal, Wifi, Battery,
+  ArrowRight, Bell, Heart, Menu, X, Scissors, TreePine, MessageSquare,
+  Instagram, Facebook, Mail, Send
+} from 'lucide-react';
 
 function CountUpAnimation({ end, duration }: { end: number; duration: number }) {
   const [count, setCount] = useState(0);
@@ -232,11 +237,243 @@ function ContactForm() {
   );
 }
 
+function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('accueil');
+
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setActiveSection(sectionId);
+      setIsMenuOpen(false);
+    }
+  };
+
+  const navItems = [
+    { id: 'accueil', label: 'Accueil' },
+    { id: 'services', label: 'Services' },
+    { id: 'realisations', label: 'Réalisations' },
+    { id: 'avis', label: 'Avis Clients' },
+    { id: 'contact', label: 'Contact' },
+  ];
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          <div className="flex items-center">
+            <div className="h-12 w-12 bg-[#334EAC] rounded-lg flex items-center justify-center text-white font-bold">
+              MFR
+            </div>
+            <span className="ml-3 text-xl font-bold text-[#081F5C]">MFR Paysage</span>
+          </div>
+
+          <div className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`text-sm font-medium transition-colors ${
+                  activeSection === item.id
+                    ? 'text-[#334EAC]'
+                    : 'text-gray-600 hover:text-[#334EAC]'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+            <button className="premium-button">
+              <Phone className="w-4 h-4 mr-2" />
+              Nous contacter
+            </button>
+          </div>
+
+          <button
+            className="md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? (
+              <X className="h-6 w-6 text-[#334EAC]" />
+            ) : (
+              <Menu className="h-6 w-6 text-[#334EAC]" />
+            )}
+          </button>
+        </div>
+
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden"
+            >
+              <div className="py-4 space-y-4">
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className="block w-full text-left px-4 py-2 text-base font-medium text-gray-600 hover:text-[#334EAC]"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                <button className="premium-button w-full justify-center mt-4">
+                  <Phone className="w-4 h-4 mr-2" />
+                  Nous contacter
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+    </header>
+  );
+}
+
+function Reviews() {
+  const reviews = [
+    {
+      id: 1,
+      name: "Marie Dubois",
+      role: "Propriétaire",
+      content: "Un travail remarquable réalisé par l'équipe. Le suivi via l'application est vraiment pratique !",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80"
+    },
+    {
+      id: 2,
+      name: "Pierre Martin",
+      role: "Gérant de copropriété",
+      content: "Professionnalisme et qualité au rendez-vous. Les apprentis sont très bien encadrés.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80"
+    },
+    {
+      id: 3,
+      name: "Sophie Laurent",
+      role: "Architecte paysagiste",
+      content: "Une collaboration fructueuse qui allie formation et excellence du service.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80"
+    }
+  ];
+
+  return (
+    <div className="py-24 bg-white" id="avis">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl font-bold mb-4">Ce que disent nos clients</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Découvrez les témoignages de nos clients satisfaits et leur expérience avec notre équipe.
+          </p>
+        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {reviews.map((review) => (
+            <motion.div
+              key={review.id}
+              whileHover={{ y: -8 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              className="premium-card p-8"
+            >
+              <div className="flex items-center mb-6">
+                <img
+                  src={review.image}
+                  alt={review.name}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+                <div className="ml-4">
+                  <h4 className="font-semibold text-[#081F5C]">{review.name}</h4>
+                  <p className="text-sm text-[#7096D1]">{review.role}</p>
+                </div>
+              </div>
+              <div className="flex mb-4">
+                {[...Array(review.rating)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className="w-5 h-5 text-yellow-400 fill-current"
+                  />
+                ))}
+              </div>
+              <p className="text-gray-600">{review.content}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function VideoSection() {
+  return (
+    <div className="relative h-screen w-full overflow-hidden">
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source
+          src="https://player.vimeo.com/external/373912444.sd.mp4?s=1c46592d1445a96db9dd5c6c10b6a93968c8de43&profile_id=164&oauth2_token_id=57447761"
+          type="video/mp4"
+        />
+      </video>
+      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="text-center text-white max-w-4xl px-4">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-5xl font-bold mb-6"
+          >
+            Une équipe passionnée à votre service
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-xl mb-8"
+          >
+            Découvrez notre savoir-faire et notre engagement pour des espaces verts d'exception
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+            className="flex justify-center gap-4"
+          >
+            <button className="premium-button">
+              Découvrir nos services
+              <ChevronRight className="w-5 h-5 ml-2" />
+            </button>
+            <button className="secondary-button bg-white/10 hover:bg-white/20 border-white/20">
+              Nos réalisations
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </button>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function App() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-20">
+      <Header />
+      
       {/* Hero Section */}
-      <div className="relative min-h-[90vh] hero-gradient overflow-hidden">
+      <div className="relative min-h-[90vh] hero-gradient overflow-hidden" id="accueil">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -319,8 +556,12 @@ function App() {
         </div>
       </div>
 
+      <Reviews />
+      
+      <VideoSection />
+
       {/* Services Section */}
-      <div className="py-24 bg-gray-50">
+      <div className="py-24 bg-gray-50" id="services">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -350,7 +591,7 @@ function App() {
               description="Création d'espaces paysagers écologiques avec des matériaux locaux et durables."
             />
             <ServiceCard
-              icon={Garden}
+              icon={Award}
               title="Entretien"
               price="À partir de 120€"
               period="/mois"
@@ -368,7 +609,7 @@ function App() {
       </div>
 
       {/* Réalisations Section */}
-      <div className="py-24 bg-white">
+      <div className="py-24 bg-white" id="realisations">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -405,7 +646,7 @@ function App() {
       </div>
 
       {/* Contact Section */}
-      <div className="py-24 bg-gray-50">
+      <div className="py-24 bg-gray-50" id="contact">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             <motion.div
