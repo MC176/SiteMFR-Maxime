@@ -4,7 +4,7 @@ import {
   Phone, Users, Star, Clock, Shield, Leaf, ChevronRight, Award,
   Euro, Smartphone, CheckCircle, MapPin, Signal, Wifi, Battery,
   ArrowRight, Bell, Heart, Menu, X, Scissors, TreePine, MessageSquare,
-  Instagram, Facebook, Mail, Send
+  Instagram, Facebook, Mail, Send, Plus
 } from 'lucide-react';
 
 function CountUpAnimation({ end, duration }: { end: number; duration: number }) {
@@ -39,19 +39,25 @@ function PhoneMockup() {
       id: 1,
       title: "Villa Les Jardins d'Élégance",
       message: "Installation de l'éclairage paysager terminée ✨",
-      time: "Il y a 5 min"
+      time: "Il y a 5 min",
+      progress: 100,
+      image: "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80"
     },
     {
       id: 2,
       title: "Domaine du Lac",
       message: "Nouvelles photos du bassin aquatique 🌿",
-      time: "Il y a 12 min"
+      time: "Il y a 12 min",
+      progress: 75,
+      image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80"
     },
     {
       id: 3,
       title: "Résidence Les Magnolias",
       message: "Validation du plan d'aménagement ⭐️",
-      time: "Il y a 25 min"
+      time: "Il y a 25 min",
+      progress: 40,
+      image: "https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&q=80"
     }
   ];
 
@@ -69,43 +75,74 @@ function PhoneMockup() {
 
   return (
     <div className="phone-mockup">
-      <div className="phone-notch" />
+      <div className="phone-notch">
+        <div className="phone-dynamic-island">
+          <div className="phone-camera" />
+          <div className="phone-sensor" />
+        </div>
+      </div>
       <div className="phone-status-bar">
-        <span>{time.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
+        <span className="font-medium">{time.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
         <div className="phone-signal-icons">
           <Signal className="w-4 h-4" />
           <Wifi className="w-4 h-4" />
           <Battery className="w-4 h-4" />
         </div>
       </div>
-      <div className="relative h-full bg-[#F9FCFF]">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-lg font-semibold text-[#081F5C]">Notifications</h3>
-            <Bell className="w-5 h-5 text-[#334EAC]" />
+      <div className="relative h-full bg-gradient-to-b from-[#F9FCFF] to-white px-4 pt-16">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h3 className="text-lg font-semibold text-[#081F5C]">Bonjour 👋</h3>
+            <p className="text-sm text-[#7096D1]">Voici vos projets en cours</p>
           </div>
-          <AnimatePresence mode="wait">
-            {notifications.map((notification, index) => (
-              <motion.div
-                key={notification.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{
-                  opacity: activeNotification === index ? 1 : 0,
-                  y: activeNotification === index ? 0 : 20,
-                  scale: activeNotification === index ? 1 : 0.95,
-                }}
-                exit={{ opacity: 0, y: -20 }}
-                className="notification-card"
-                style={{
-                  zIndex: activeNotification === index ? 10 : 1,
-                }}
-              >
-                <h4 className="font-semibold text-[#081F5C] mb-2">{notification.title}</h4>
-                <p className="text-[#334EAC] mb-3">{notification.message}</p>
-                <span className="text-xs text-[#7096D1]">{notification.time}</span>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+          <Bell className="w-5 h-5 text-[#334EAC]" />
+        </div>
+        
+        <AnimatePresence mode="wait">
+          {notifications.map((notification, index) => (
+            <motion.div
+              key={notification.id}
+              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              animate={{
+                opacity: activeNotification === index ? 1 : 0,
+                y: activeNotification === index ? 0 : 20,
+                scale: activeNotification === index ? 1 : 0.95,
+              }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
+              className="notification-card"
+              style={{
+                zIndex: activeNotification === index ? 10 : 1,
+              }}
+            >
+              <div className="flex items-start gap-4">
+                <img
+                  src={notification.image}
+                  alt={notification.title}
+                  className="w-16 h-16 rounded-xl object-cover"
+                />
+                <div className="flex-1">
+                  <h4 className="font-semibold text-[#081F5C] text-sm mb-1">{notification.title}</h4>
+                  <p className="text-[#7096D1] text-sm mb-2">{notification.message}</p>
+                  <div className="w-full h-1 bg-[#E7F1FF] rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-[#081F5C] to-[#334EAC]"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${notification.progress}%` }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                    />
+                  </div>
+                  <span className="text-xs text-[#7096D1] mt-2 block">{notification.time}</span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        <div className="absolute bottom-8 left-4 right-4">
+          <button className="w-full premium-button justify-center">
+            <Plus className="w-5 h-5 mr-2" />
+            Nouveau projet
+          </button>
         </div>
       </div>
     </div>
@@ -474,6 +511,11 @@ function App() {
       
       {/* Hero Section */}
       <div className="relative min-h-[90vh] hero-gradient overflow-hidden" id="accueil">
+        {/* Background blobs */}
+        <div className="absolute w-96 h-96 rounded-full bg-[#081F5C]/5 top-20 left-20 animate-blob opacity-70 filter blur-3xl" />
+        <div className="absolute w-96 h-96 rounded-full bg-[#334EAC]/5 bottom-20 right-20 animate-blob opacity-70 filter blur-3xl" style={{ animationDelay: "-2s" }} />
+        <div className="absolute w-96 h-96 rounded-full bg-[#7096D1]/5 top-40 right-40 animate-blob opacity-70 filter blur-3xl" style={{ animationDelay: "-4s" }} />
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
@@ -482,14 +524,13 @@ function App() {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-6xl font-bold leading-tight mb-6">
-                Paysagisme de qualité,
+                <span className="gradient-text">Excellence</span>
                 <br />
-                <span className="gradient-text">prix justes & transparence totale</span>
+                en Paysagisme
               </h1>
-              <p className="text-xl text-[#334EAC] mb-10 leading-relaxed">
-                Une approche éco-responsable et pédagogique du paysagisme. 
-                Nos chantiers sont réalisés par des jeunes en formation, 
-                encadrés par des professionnels expérimentés.
+              <p className="text-xl text-[#7096D1] mb-10 leading-relaxed">
+                Une expertise unique dans la création et l'entretien de jardins d'exception. 
+                Nous donnons vie à vos rêves d'espaces extérieurs avec raffinement et élégance.
               </p>
               <div className="flex gap-4">
                 <button className="premium-button">
@@ -501,7 +542,31 @@ function App() {
                   Télécharger l'App
                 </button>
               </div>
+
+              {/* Floating stats cards */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+                className="mt-12 bg-gradient-to-br from-white to-[#E7F1FF]/20 p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#E7F1FF] max-w-md"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-[#081F5C]/10 flex items-center justify-center">
+                    <Star className="w-6 h-6 text-[#081F5C]" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-[#7096D1]">Note moyenne</p>
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                      ))}
+                      <span className="ml-2 font-semibold text-[#081F5C]">4.9/5</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
             </motion.div>
+
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
