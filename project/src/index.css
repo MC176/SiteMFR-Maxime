@@ -12,18 +12,18 @@
 
 @layer components {
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-light;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-secondary;
   }
   
   .premium-card {
-    @apply relative overflow-hidden rounded-3xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] 
-    border border-secondary-light transition-all duration-300 hover:shadow-[0_20px_40px_rgb(0,0,0,0.08)];
+    @apply relative overflow-hidden rounded-3xl bg-white shadow-[0_8px_30px_rgb(45,27,105,0.06)] 
+    border border-secondary-light transition-all duration-300 hover:shadow-[0_20px_40px_rgb(45,27,105,0.08)];
   }
 
   .premium-button {
     @apply inline-flex items-center px-8 py-4 text-base font-medium transition-all rounded-2xl
-    bg-gradient-to-r from-primary to-primary-light text-white
-    hover:shadow-[0_10px_20px_rgba(8,31,92,0.2)]
+    bg-gradient-to-r from-primary via-accent to-secondary text-white
+    hover:shadow-[0_10px_20px_rgba(45,27,105,0.2)]
     active:from-primary active:to-primary-light
     backdrop-blur-sm;
   }
@@ -39,8 +39,8 @@
   }
 
   .phone-mockup {
-    @apply relative w-full aspect-[9/19.5] rounded-[3rem] border-[14px] border-[#1C1C1E] 
-    shadow-[0_50px_100px_rgba(0,0,0,0.25)] overflow-hidden bg-white
+    @apply relative w-full aspect-[9/19.5] rounded-[3rem] border-[14px] border-[#2D1B69] 
+    shadow-phone overflow-hidden bg-gradient-to-b from-secondary-light to-white
     before:content-[''] before:absolute before:inset-0 before:z-10 
     before:pointer-events-none before:border-[1px] before:border-white/10 before:rounded-[2rem]
     after:content-[''] after:absolute after:inset-[-100px] after:bg-gradient-to-t 
@@ -48,22 +48,23 @@
   }
 
   .phone-notch {
-    @apply absolute top-0 left-1/2 -translate-x-1/2 w-[30%] h-[25px] bg-[#1C1C1E] rounded-b-[24px]
-    flex items-center justify-center gap-2 overflow-hidden
+    @apply absolute top-0 left-1/2 -translate-x-1/2 w-[30%] h-[25px] bg-[#2D1B69] rounded-b-[24px]
+    flex items-center justify-center gap-2 overflow-hidden z-50
     before:content-[''] before:absolute before:w-[25%] before:h-[25%] before:rounded-full before:bg-black;
   }
 
   .phone-dynamic-island {
-    @apply absolute w-[95px] h-[25px] bg-black rounded-[20px] flex items-center justify-center gap-1;
+    @apply absolute w-[95px] h-[25px] bg-black rounded-[20px] flex items-center justify-center gap-1
+    transition-all duration-300 hover:w-[120px] hover:h-[28px];
   }
 
   .phone-camera {
-    @apply w-3 h-3 rounded-full bg-[#1C1C1E] relative
+    @apply w-3 h-3 rounded-full bg-[#2D1B69] relative
     before:content-[''] before:absolute before:inset-[2px] before:rounded-full before:bg-[#080808];
   }
 
   .phone-sensor {
-    @apply w-2 h-2 rounded-full bg-[#1C1C1E] relative
+    @apply w-2 h-2 rounded-full bg-[#2D1B69] relative
     before:content-[''] before:absolute before:inset-[2px] before:rounded-full before:bg-[#080808];
   }
 
@@ -76,12 +77,13 @@
   }
 
   .notification-card {
-    @apply absolute left-4 right-4 p-6 bg-white rounded-2xl shadow-lg border border-secondary-light/50
-    backdrop-blur-md bg-white/90 transform transition-all duration-500 ease-out;
+    @apply absolute left-4 right-4 p-6 bg-white/90 rounded-2xl shadow-lg border border-secondary-light
+    backdrop-blur-md transform transition-all duration-500 ease-out hover:scale-105
+    hover:shadow-xl hover:bg-white;
   }
 
   .service-price {
-    @apply text-primary-light text-2xl font-semibold tracking-tight;
+    @apply text-accent text-2xl font-semibold tracking-tight;
   }
 
   .service-period {
@@ -90,7 +92,7 @@
 
   .learn-more-button {
     @apply inline-flex items-center px-6 py-3 text-sm font-medium rounded-xl
-    text-primary-light bg-secondary-light/20 hover:bg-secondary-light/40 transition-all duration-300;
+    text-accent bg-secondary-light/20 hover:bg-secondary-light/40 transition-all duration-300;
   }
 
   .hero-blob {
@@ -125,8 +127,8 @@
 .hero-gradient {
   background: radial-gradient(
     circle at 70% 50%,
-    rgba(208, 227, 255, 0.3) 0%,
-    rgba(231, 241, 255, 0.2) 50%,
+    rgba(156, 39, 176, 0.15) 0%,
+    rgba(225, 190, 231, 0.1) 50%,
     transparent 100%
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Phone, Users, Star, Clock, Shield, Leaf, ChevronRight, Award,
@@ -9,28 +9,49 @@ import {
 
 function CountUpAnimation({ end, duration }: { end: number; duration: number }) {
   const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const counterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let startTimestamp: number | null = null;
-    const step = (timestamp: number) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      
-      setCount(Math.floor(progress * end));
-      
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      }
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          let startTimestamp: number | null = null;
+          const step = (timestamp: number) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            
+            setCount(Math.floor(progress * end));
+            
+            if (progress < 1) {
+              window.requestAnimationFrame(step);
+            }
+          };
 
-    window.requestAnimationFrame(step);
+          window.requestAnimationFrame(step);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (counterRef.current) {
+      observer.observe(counterRef.current);
+    }
 
     return () => {
-      startTimestamp = null;
+      if (counterRef.current) {
+        observer.unobserve(counterRef.current);
+      }
     };
-  }, [end, duration]);
+  }, [end, duration, hasAnimated]);
 
-  return <span className="font-bold text-5xl gradient-text">{count}+</span>;
+  return (
+    <div ref={counterRef}>
+      <span className="font-bold text-5xl gradient-text">{count}+</span>
+    </div>
+  );
 }
 
 function PhoneMockup() {
@@ -450,14 +471,14 @@ function Reviews() {
 function VideoSection() {
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {/* Remplacement par l'iframe YouTube */}
       <iframe
         className="absolute inset-0 w-full h-full object-cover"
-        src="https://www.youtube.com/embed/zJIkX35lpcU?autoplay=1&loop=1&mute=1&playlist=zJIkX35lpcU&controls=0"
+        src="https://www.youtube.com/embed/zJIkX35lpcU?autoplay=1&loop=1&mute=1&playlist=zJIkX35lpcU&controls=0&showinfo=0&rel=0&modestbranding=1"
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
         title="YouTube video player"
+        style={{ width: '100vw', height: '100vh', pointerEvents: 'none' }}
       />
       <div className="absolute inset-0 bg-black/40" />
       <div className="absolute inset-0 flex items-center justify-center">
@@ -521,7 +542,7 @@ function App() {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-6xl font-bold leading-tight mb-6">
-                <span className="gradient-text">Excellence</span>
+                <span className="gradient-text">Votre Entreprise</span>
                 <br />
                 en Paysagisme
               </h1>
@@ -650,186 +671,207 @@ function App() {
               title="Aménagement"
               price="Sur devis"
               period="personnalisé"
-              description="Création d'espaces paysagers écologiques avec des matériaux locaux et durables."
+              description="Création d'espaces paysagers écologiques avec des matériaux locaux et durables. Aménagement sur mesure."
             />
             <ServiceCard
               icon={Award}
               title="Entretien"
               price="À partir de 120€"
               period="/mois"
-              description="Entretien régulier de votre jardin : tonte, désherbage, taille et soins des végétaux."
+              description="Entretien régulier de votre jardin : tonte, désherbage, taille et soins des végétaux. Nous contacter."
             />
             <ServiceCard
               icon={Leaf}
               title="Création"
               price="Sur devis"
               period="personnalisé"
-              description="Conception et réalisation complète de votre jardin, de l'étude à la plantation."
+              description="Conception et réalisation complète de votre jardin, de l'étude à la plantation. Donnez vie à vos envies. Possibilité d'être présent toute l'année."
             />
           </div>
         </div>
       </div>
 
-      {/* Réalisations Section */}
-      <div className="py-24 bg-white" id="realisations">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold mb-4">Nos Réalisations</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              Découvrez nos plus beaux projets et laissez-vous inspirer pour votre futur jardin.
-            </p>
-          </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <ProjectCard
-              image="https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&q=80"
-              title="Jardin Méditerranéen"
-              category="Création complète"
-              rating={5}
-            />
-            <ProjectCard
-              image="https://images.unsplash.com/photo-1598902108854-10e335adac99?auto=format&fit=crop&q=80"
-              title="Terrasse Zen"
-              category="Aménagement"
-              rating={5}
-            />
-            <ProjectCard
-              image="https://images.unsplash.com/photo-1598902108854-10e335adac99?auto=format&fit=crop&q=80"
-              title="Potager Bio"
-              category="Création"
-              rating={5}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Contact Section */}
-      <div className="py-24 bg-gray-50" id="contact">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-4xl font-bold mb-6">
-                Contactez-nous
-              </h2>
-              <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-                Vous avez un projet en tête ? N'hésitez pas à nous contacter pour en discuter. 
-                Notre équipe vous répondra dans les plus brefs délais.
-              </p>
-              <div className="grid grid-cols-1 gap-6">
-                <div className="flex items-start gap-4">
-                  <div className="rounded-lg bg-green-50 p-3">
-                    <Phone className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">Téléphone</h3>
-                    <p className="text-gray-600">+33 4 90 28 00 00</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="rounded-lg bg-green-50 p-3">
-                    <Mail className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">Email</h3>
-                    <p className="text-gray-600">contact@mfr-richerenches.org</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="rounded-lg bg-green-50 p-3">
-                    <MapPin className="w-6 h-6 text-green-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">Adresse</h3>
-                    <p className="text-gray-600">MFR de Richerenches<br />Enclave des Papes<br />84600 Richerenches</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="premium-card p-8"
-            >
-              <ContactForm />
-            </motion.div>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <footer className="bg-[#081F5C] text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div>
-              <h3 className="text-xl font-semibold mb-4">À propos</h3>
-              <p className="text-[#7096D1] leading-relaxed">
-                Une initiative de la MFR de Richerenches pour former la nouvelle génération 
-                de paysagistes tout en proposant des services de qualité.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Services</h3>
-              <ul className="space-y-2 text-[#7096D1]">
-                <li>Taille & Élagage</li>
-                <li>Aménagement Paysager</li>
-                <li>Entretien de Jardins</li>
-                <li>Création d'Espaces Verts</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Légal</h3>
-              <ul className="space-y-2 text-[#7096D1]">
-                <li>Mentions légales</li>
-                <li>Politique de confidentialité</li>
-                <li>Conditions générales</li>
-                <li>Cookies</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-4">Suivez-nous</h3>
-              <div className="flex gap-4">
-                <a href="#" className="text-white hover:text-[#7096D1] transition-colors">
-                  <Facebook className="w-6 h-6" />
-                </a>
-                <a href="#" className="text-white hover:text-[#7096D1] transition-colors">
-                  <Instagram className="w-6 h-6" />
-                </a>
-              </div>
-              <div className="mt-6">
-                <img
-                  src="https://api.producthunt.com/widgets/embed-image/v1/review.svg?post_id=123456&theme=light"
-                  alt="Avis clients"
-                  className="h-10"
+{/* Réalisations Section */}
+<div className="py-24 bg-white" id="realisations">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-center mb-16"
+              >
+                <h2 className="text-4xl font-bold mb-4">Nos Réalisations</h2>
+                <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+                  Découvrez nos plus beaux projets et laissez-vous inspirer pour votre futur jardin.
+                </p>
+              </motion.div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <ProjectCard
+                  image="https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&q=80"
+                  title="Jardin Méditerranéen"
+                  category="Création complète"
+                  rating={5}
+                />
+                <ProjectCard
+                  image="https://images.unsplash.com/photo-1598902108854-10e335adac99?auto=format&fit=crop&q=80"
+                  title="Terrasse Zen"
+                  category="Aménagement"
+                  rating={5}
+                />
+                <ProjectCard
+                  image="https://images.unsplash.com/photo-1598902108854-10e335adac99?auto=format&fit=crop&q=80"
+                  title="Potager Bio"
+                  category="Création"
+                  rating={5}
+                />
+                <ProjectCard
+                  image="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&q=80"
+                  title="Villa Les Oliviers"
+                  category="Aménagement Complet"
+                  rating={5}
+                />
+                <ProjectCard
+                  image="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80"
+                  title="Jardin Aquatique"
+                  category="Création"
+                  rating={5}
+                />
+                <ProjectCard
+                  image="https://images.unsplash.com/photo-1558904541-efa843a96f01?auto=format&fit=crop&q=80"
+                  title="Espace Détente"
+                  category="Design Paysager"
+                  rating={5}
                 />
               </div>
             </div>
           </div>
-          <div className="mt-12 pt-8 border-t border-[#334EAC]">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-[#7096D1] text-sm">
-                © {new Date().getFullYear()} MFR de Richerenches - Tous droits réservés
-              </p>
-              <div className="flex items-center gap-2">
-                <Heart className="w-5 h-5 text-red-400" />
-                <p className="text-sm">
-                  Développé avec passion par la MFR de Richerenches
-                </p>
+
+          {/* Reviews Section */}
+          <Reviews />
+
+          {/* Contact Section */}
+          <div className="py-24 bg-gray-50" id="contact">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <h2 className="text-4xl font-bold mb-6">
+                    Contactez-nous
+                  </h2>
+                  <p className="text-gray-600 text-lg mb-8 leading-relaxed">
+                    Vous avez un projet en tête ? N'hésitez pas à nous contacter pour en discuter. 
+                    Notre équipe vous répondra dans les plus brefs délais.
+                  </p>
+                  <div className="grid grid-cols-1 gap-6">
+                    <div className="flex items-start gap-4">
+                      <div className="rounded-lg bg-green-50 p-3">
+                        <Phone className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Téléphone</h3>
+                        <p className="text-gray-600">+33 6 80 41 28 12</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="rounded-lg bg-green-50 p-3">
+                        <Mail className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Email</h3>
+                        <p className="text-gray-600">maxime.chauvin.mfr@outlook.com</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-4">
+                      <div className="rounded-lg bg-green-50 p-3">
+                        <MapPin className="w-6 h-6 text-green-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Adresse</h3>
+                        <p className="text-gray-600">MFR de Richerenches<br />Enclave des Papes<br />84600 Richerenches</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  className="premium-card p-8"
+                >
+                  <ContactForm />
+                </motion.div>
               </div>
             </div>
           </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
 
-export default App;
+          {/* Footer */}
+          <footer className="bg-[#081F5C] text-white py-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div>
+                  <h3 className="text-xl font-semibold mb-4">À propos</h3>
+                  <p className="text-[#7096D1] leading-relaxed">
+                    Une initiative de la MFR de Richerenches pour former la nouvelle génération 
+                    de paysagistes tout en proposant des services de qualité.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-4">Services</h3>
+                  <ul className="space-y-2 text-[#7096D1]">
+                    <li>Taille & Élagage</li>
+                    <li>Aménagement Paysager</li>
+                    <li>Entretien de Jardins</li>
+                    <li>Création d'Espaces Verts</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-4">Légal</h3>
+                  <ul className="space-y-2 text-[#7096D1]">
+                    <li>Mentions légales</li>
+                    <li>Politique de confidentialité</li>
+                    <li>Conditions générales</li>
+                    <li>Cookies</li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-4">Suivez-nous</h3>
+                  <div className="flex gap-4">
+                    <a href="#" className="text-white hover:text-[#7096D1] transition-colors">
+                      <Facebook className="w-6 h-6" />
+                    </a>
+                    <a href="#" className="text-white hover:text-[#7096D1] transition-colors">
+                      <Instagram className="w-6 h-6" />
+                    </a>
+                  </div>
+                  <div className="mt-6">
+                    <img
+                      src="https://api.producthunt.com/widgets/embed-image/v1/review.svg?post_id=123456&theme=light"
+                      alt="Avis clients"
+                      className="h-10"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mt-12 pt-8 border-t border-[#334EAC]">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                  <p className="text-[#7096D1] text-sm">
+                    © {new Date().getFullYear()} MFR de Richerenches - Tous droits réservés
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Heart className="w-5 h-5 text-red-400" />
+                    <p className="text-sm">
+                      Développé avec passion par la MFR de Richerenches
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    export default App;
